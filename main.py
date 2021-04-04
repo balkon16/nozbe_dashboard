@@ -21,7 +21,7 @@ def main():
     app_configuration = os_helper.read_json_file(directory=CONFIGURATION_DIR, file_name=CONFIGURATION_FILE)
     nozbe_configuration = app_configuration['nozbe']
     current_dir_str = os.path.dirname(sys.argv[0])
-    current_dir_pathlib = os_helper.path_constructor(current_dir_str)
+    current_dir_pathlib = os_helper.get_path(current_dir_str)
     api_handler = APIHandler(current_dir=current_dir_pathlib,
                              credentials_dir_name=nozbe_configuration['credentials_file']['directory'],
                              credentials_file_name=nozbe_configuration['credentials_file']['file_name'])

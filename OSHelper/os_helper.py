@@ -22,7 +22,7 @@ class OSHelper():
     def __repr__(self):
         return 'OSHelper instance'
 
-    def path_constructor(self, *path_elements, path_null=''):
+    def get_path(self, *path_elements, path_null=''):
         """
         Parameters
         ----------
@@ -116,11 +116,11 @@ class OSHelper():
 
         if json_file_path:
             if isinstance(json_file_path, str):
-                potential_path = self.path_constructor(json_file_path)
+                potential_path = self.get_path(json_file_path)
             else:
                 potential_path = json_file_path
         elif directory and file_name:
-            potential_path = self.path_constructor(directory, file_name)
+            potential_path = self.get_path(directory, file_name)
         else:
             message = """The read_json_file method of {} requires either: 
                 json_file_path argument or 
