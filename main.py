@@ -21,13 +21,16 @@ def main():
     app_configuration = os_helper.read_json_file(directory=CONFIGURATION_DIR, file_name=CONFIGURATION_FILE)
     nozbe_configuration = app_configuration['nozbe']
     current_dir_str = os.path.dirname(sys.argv[0])
-    current_dir_pathlib = os_helper.get_path(current_dir_str)
+    current_dir_pathlib = os_helper.construct_path(current_dir_str)
     api_handler = APIHandler(current_dir=current_dir_pathlib,
                              credentials_dir_name=nozbe_configuration['credentials_file']['directory'],
                              credentials_file_name=nozbe_configuration['credentials_file']['file_name'])
     api_handler.refresh_token(url=nozbe_configuration['endpoints']['refresh_token'])
     tasks = api_handler.get_entity_data(endpoint=nozbe_configuration['endpoints']['data'], entity_type='task')
-    print(tasks)
+
+    data_dir_pathlib = os_helper.construct_path(current_dir_pathlib, nozbe_configuration['data']['directory'])
+    os_helper.write_json_file(data_dir_pathlib, 'test_file.json', tasks)
+
 
 if __name__ == "__main__":
     main()

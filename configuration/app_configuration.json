@@ -7,6 +7,9 @@
     "credentials_file": {
       "directory": "credentials",
       "file_name": "nozbe_credentials.json"
+    },
+    "data": {
+      "directory": "data"
     }
   }
 }

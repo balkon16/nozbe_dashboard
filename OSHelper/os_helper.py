@@ -22,7 +22,7 @@ class OSHelper():
     def __repr__(self):
         return 'OSHelper instance'
 
-    def get_path(self, *path_elements, path_null=''):
+    def construct_path(self, *path_elements, path_null=''):
         """
         Parameters
         ----------
@@ -116,11 +116,11 @@ class OSHelper():
 
         if json_file_path:
             if isinstance(json_file_path, str):
-                potential_path = self.get_path(json_file_path)
+                potential_path = self.construct_path(json_file_path)
             else:
                 potential_path = json_file_path
         elif directory and file_name:
-            potential_path = self.get_path(directory, file_name)
+            potential_path = self.construct_path(directory, file_name)
         else:
             message = """The read_json_file method of {} requires either: 
                 json_file_path argument or 
@@ -136,6 +136,32 @@ class OSHelper():
                     raise ValueError('Error: {}.\nFile: {}'.format(e, str(potential_path.absolute())))
 
         return contents
+
+    def write_json_file(self, directory, file_name, contents):
+        """
+
+        Parameters
+        ----------
+        directory : pathlib.PosixPath or pathlib.WindowsPath
+        file_name : str
+            A file extensions must be present
+        contents : list, dict
+            JSON compliant Python object (list, dictionary)
+
+        Returns
+        -------
+        created_file_path : pathlib.PosixPath or pathlib.WindowsPath
+
+        """
+        write_path = self.construct_path(directory, file_name)
+        try:
+            with open(write_path, 'w') as f:
+                json.dump(contents, f, indent=4, sort_keys=True, ensure_ascii=False)
+            logging.info('Contents saved to {}.'.format(write_path))
+            return write_path
+        except BaseException as err:
+            logging.error("Couldn't save to {}: {}".format(write_path, err))
+            return None
 
     def get_file_modification_time(self, file_path):
         """
