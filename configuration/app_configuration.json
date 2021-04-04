@@ -8,9 +8,6 @@
       "directory": "credentials",
       "file_name": "nozbe_credentials.json"
     },
-    "data": {
-      "directory": "data"
-    },
     "entities": [
       "task",
       "project",
@@ -18,6 +15,45 @@
     ]
   },
   "general": {
-    "datetime_format": "%Y-%m-%dT%H:%M:%S"
+    "datetime_format": "%Y-%m-%dT%H:%M:%S",
+    "data": {
+      "directory": "data"
+    }
+  },
+  "data_handler": {
+    "mapping": {
+      "task": {
+        "fields": [
+          "completed",
+          "datetime",
+          "id",
+          "name",
+          "project_id",
+          "recur",
+          "time",
+          "ts",
+          "_created_at_org"
+        ]
+      },
+      "context": {
+        "fields": [
+          "id",
+          "name",
+          "ts"
+        ]
+      },
+      "project": {
+        "fields": [
+          "_created_at",
+          "_has_completed",
+          "body",
+          "description",
+          "id",
+          "name",
+          "tags",
+          "ts"
+        ]
+      }
+    }
   }
 }

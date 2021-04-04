@@ -36,7 +36,7 @@ def main():
         filename = "{}_{}.json".format(entity_name,
                                        os_helper.get_current_time().strftime(general_configuration['datetime_format']))
 
-        data_dir_pathlib = os_helper.construct_path(current_dir_pathlib, nozbe_configuration['data']['directory'])
+        data_dir_pathlib = os_helper.construct_path(current_dir_pathlib, general_configuration['data']['directory'])
         os_helper.write_json_file(data_dir_pathlib, filename, content)
 
 

@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 logger.debug("Logging in {} configured.".format(__name__))
 
 
-class OSHelper():
+class OSHelper:
 
     def __init__(self):
         logger.debug('An instance of the class {} created.'.format(__class__.__name__))
@@ -194,3 +194,20 @@ class OSHelper():
         """
 
         return datetime.datetime.today()
+
+    def iterate_over_directory(self, path):
+        """
+
+        Parameters
+        ----------
+        path : pathlib.PosixPath, pathlib.WindowsPath
+
+        Returns
+        -------
+        files : list
+            A list of pathlib.Path objects
+        """
+
+        if self.validate_path(path):
+            files = [file for file in path.rglob('*')]
+            return files
