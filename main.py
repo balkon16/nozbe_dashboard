@@ -1,3 +1,5 @@
+# TODO: script for installing and starting Airflow in a container: https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html#running-the-cli-commands
+
 import logging
 from logging.config import dictConfig
 import os
