@@ -92,13 +92,13 @@ class OSHelper():
         ----------
         json_file_path : str or pathlib.PosixPath or pathlib.WindowsPath
             If the path provided is a string a path is constructed and then validated. If the path provided is an object
-            from the `pathlib` library only the validtion method is called.
+            from the `pathlib` library only the validation method is called.
         directory : str or pathlib.PosixPath or pathlib.WindowsPath
             If the path provided is a string a path is constructed and then validated. If the path provided is an object
-            from the `pathlib` library only the validtion method is called.
+            from the `pathlib` library only the validation method is called.
         file_name : str or pathlib.PosixPath or pathlib.WindowsPath
             If the path provided is a string a path is constructed and then validated. If the path provided is an object
-            from the `pathlib` library only the validtion method is called.
+            from the `pathlib` library only the validation method is called.
 
         Returns
         ---------
