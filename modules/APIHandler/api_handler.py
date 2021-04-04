@@ -10,8 +10,7 @@ import requests
 import logging
 import json
 
-from OSHelper.os_helper import OSHelper
-
+from modules.OSHelper.os_helper import OSHelper
 
 
 class APIHandler:

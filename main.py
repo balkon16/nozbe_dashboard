@@ -4,8 +4,8 @@ import os
 import sys
 
 from configuration.logging_configuration import new_config
-from APIHandler.api_handler import APIHandler
-from OSHelper.os_helper import OSHelper
+from modules.APIHandler.api_handler import APIHandler
+from modules.OSHelper.os_helper import OSHelper
 
 CONFIGURATION_DIR = 'configuration'
 CONFIGURATION_FILE = 'app_configuration.json'
