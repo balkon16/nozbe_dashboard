@@ -10,6 +10,14 @@
     },
     "data": {
       "directory": "data"
-    }
+    },
+    "entities": [
+      "task",
+      "project",
+      "context"
+    ]
+  },
+  "general": {
+    "datetime_format": "%Y-%m-%dT%H:%M:%S"
   }
 }

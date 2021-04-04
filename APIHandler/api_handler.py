@@ -17,7 +17,7 @@ from OSHelper.os_helper import OSHelper
 class APIHandler:
     os_helper = OSHelper()
 
-    def __init__(self, current_dir, credentials_dir_name, credentials_file_name):
+    def __init__(self, current_dir, credentials_dir_name, credentials_file_name, supported_entities):
         """
         current_dir : pathlib.PosixPath or pathlib.WindowsPath
             This is the path of the process instantiating an object of the APIHandler class.
@@ -26,6 +26,8 @@ class APIHandler:
             `current_dir`.
         credentials_file_name : str
             The credentials file name (with extension).
+        supported_entities : list
+            A list (of str) with the names of supported entities.
         """
         try:
             if APIHandler.os_helper.validate_path(current_dir):
@@ -40,6 +42,7 @@ class APIHandler:
         self.credentials_dir = self.current_dir / credentials_dir_name
         self.credentials_dict = APIHandler.os_helper.read_json_file(directory=self.credentials_dir
                                                                     , file_name=credentials_file_name)
+        self.supported_entities = supported_entities
         logging.debug("Initialized an instance of API Handler class.")
 
     def __repr__(self):
@@ -137,15 +140,14 @@ class APIHandler:
         endpoint : str
             An endpoint providing data for a given entity type.
         entity_type : str
-            # TODO: implementacja innych encji
             Allowed entity types are: task.
         Returns
         -------
         content : list, None
             Returns a list of dictionaries if successful, None otherwise.
         """
-        ALLOWED_TYPES = {"task"}
-        if entity_type not in ALLOWED_TYPES:
+
+        if entity_type not in self.supported_entities:
             raise NotImplementedError("Fetching data for type {} is not implemented.".format(entity_type))
         data = 'type={}'.format(entity_type)
         params = {"access_token": self.credentials_dict['access_token']}
