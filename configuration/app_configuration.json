@@ -1,0 +1,11 @@
+{
+  "nozbe": {
+    "endpoints": {
+      "refresh_token": "https://api.nozbe.com:3000/oauth/secret/refresh"
+    },
+    "credentials_file": {
+      "directory": "credentials",
+      "file_name": "nozbe_credentials.json"
+    }
+  }
+}
