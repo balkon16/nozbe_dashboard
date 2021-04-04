@@ -1,7 +1,8 @@
 {
   "nozbe": {
     "endpoints": {
-      "refresh_token": "https://api.nozbe.com:3000/oauth/secret/refresh"
+      "refresh_token": "https://api.nozbe.com:3000/oauth/secret/refresh",
+      "data": "https://api.nozbe.com:3000/list"
     },
     "credentials_file": {
       "directory": "credentials",

@@ -26,7 +26,8 @@ def main():
                              credentials_dir_name=nozbe_configuration['credentials_file']['directory'],
                              credentials_file_name=nozbe_configuration['credentials_file']['file_name'])
     api_handler.refresh_token(url=nozbe_configuration['endpoints']['refresh_token'])
-
+    tasks = api_handler.get_entity_data(endpoint=nozbe_configuration['endpoints']['data'], entity_type='task')
+    print(tasks)
 
 if __name__ == "__main__":
     main()

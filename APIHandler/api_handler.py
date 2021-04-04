@@ -8,6 +8,7 @@ This class handles communication between the application and the Nozbe API. The 
 
 import requests
 import logging
+import json
 
 from OSHelper.os_helper import OSHelper
 
@@ -47,7 +48,7 @@ class APIHandler:
     def __str__(self):
         return "Instance of {} class. Location: {}".format(self.__class__.__name__, str(self.current_dir.absolute()))
 
-    def _send_get_request(self, url, headers, payload):
+    def _send_get_request(self, url, params, payload):
         """
         Send a GET request.
 
@@ -55,16 +56,16 @@ class APIHandler:
         ----------
         url : str
 
-        headers : dict
+        params : dict
 
-        payload : dict
+        payload : dict, str
 
         Returns
         ----------
-        object
+        str, None
         """
         try:
-            r = requests.get(url=url, headers=headers, data=payload)
+            r = requests.get(url=url, params=params, data=payload)
             status_code = r.status_code
             text = r.text
         except requests.ConnectionError as e:
@@ -125,10 +126,36 @@ class APIHandler:
     def refresh_token(self, url):
         logging.info('{}: Refreshing token.'.format(self))
         self._send_put_request(url=url,
-                               headers={'Authorization': self.credentials_dict['token']},
+                               headers={'Authorization': self.credentials_dict['access_token']},
                                payload=None)
 
-    def get_asset(self):
+    def get_entity_data(self, endpoint, entity_type):
         """
+
+        Parameters
+        ----------
+        endpoint : str
+            An endpoint providing data for a given entity type.
+        entity_type : str
+            # TODO: implementacja innych encji
+            Allowed entity types are: task.
+        Returns
+        -------
+        content : list, None
+            Returns a list of dictionaries if successful, None otherwise.
         """
-        pass
+        ALLOWED_TYPES = {"task"}
+        if entity_type not in ALLOWED_TYPES:
+            raise NotImplementedError("Fetching data for type {} is not implemented.".format(entity_type))
+        data = 'type={}'.format(entity_type)
+        params = {"access_token": self.credentials_dict['access_token']}
+        try:
+            returned_text = self._send_get_request(url=endpoint, params=params, payload=data)
+            if returned_text:
+                content = json.loads(returned_text)
+                return content
+            else:
+                return None
+        except BaseException as err:
+            logging.error("Couldn't fetch data for {} type: {}".format(entity_type, err))
+            return None
