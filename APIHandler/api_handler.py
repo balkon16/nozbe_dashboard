@@ -11,8 +11,6 @@ import logging
 
 from OSHelper.os_helper import OSHelper
 
-logger = logging.getLogger(__name__)
-logger.debug("Logging in {} configured.".format(__name__))
 
 
 class APIHandler:
@@ -32,17 +30,21 @@ class APIHandler:
             if APIHandler.os_helper.validate_path(current_dir):
                 self.current_dir = current_dir
         except TypeError as err1:
-            logger.error("Couldn't create an instance of class {}: {}".format(self.__class__.__name__, err1))
+            logging.error("Couldn't create an instance of class {}: {}".format(self.__class__.__name__, err1))
             return
         except FileNotFoundError as err2:
-            logger.error("Couldn't create an instance of class {}: {}".format(self.__class__.__name__, err2))
+            logging.error("Couldn't create an instance of class {}: {}".format(self.__class__.__name__, err2))
             return
 
         self.credentials_dir = self.current_dir / credentials_dir_name
         self.credentials_dict = APIHandler.os_helper.read_json_file(directory=self.credentials_dir
                                                                     , file_name=credentials_file_name)
+        logging.debug("Initialized an instance of API Handler class.")
 
     def __repr__(self):
+        return "Instance of {} class. Location: {}".format(self.__class__.__name__, str(self.current_dir.absolute()))
+
+    def __str__(self):
         return "Instance of {} class. Location: {}".format(self.__class__.__name__, str(self.current_dir.absolute()))
 
     def _send_get_request(self, url, headers, payload):
@@ -121,6 +123,7 @@ class APIHandler:
         return None
 
     def refresh_token(self, url):
+        logging.info('{}: Refreshing token.'.format(self))
         self._send_put_request(url=url,
                                headers={'Authorization': self.credentials_dict['token']},
                                payload=None)

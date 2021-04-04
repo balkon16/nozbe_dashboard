@@ -45,5 +45,5 @@ new_config = {
         # Otherwise it would interfere with the log levels set for each handler.
         'level': 'NOTSET',
         'handlers': ['console_stderr', 'console_stdout']
-    },
+    }
 }
