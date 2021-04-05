@@ -1,4 +1,9 @@
-# TODO: script for installing and starting Airflow in a container: https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html#running-the-cli-commands
+"""
+This the module that serves as an entry point.
+"""
+
+# TODO: script for installing and starting Airflow in a container:
+#  https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html#running-the-cli-commands
 
 import logging
 from logging.config import dictConfig
@@ -15,10 +20,13 @@ CONFIGURATION_FILE = 'app_configuration.json'
 dictConfig(new_config)
 
 logger = logging.getLogger()
-logger.debug("Logging configured in module {}.".format(__name__))
+logger.debug(f"Logging configured in module {__name__}.")
 
 
 def main():
+    """
+    The entry point.
+    """
     os_helper = OSHelper()
     app_configuration = os_helper.read_json_file(directory=CONFIGURATION_DIR, file_name=CONFIGURATION_FILE)
     nozbe_configuration = app_configuration['nozbe']
@@ -32,7 +40,7 @@ def main():
     api_handler.refresh_token(url=nozbe_configuration['endpoints']['refresh_token'])
 
     for entity_name in nozbe_configuration['entities']:
-        logger.info("Getting data for {} entity...".format(entity_name))
+        logger.info(f"Getting data for {entity_name} entity...")
         content = api_handler.get_entity_data(endpoint=nozbe_configuration['endpoints']['data'],
                                               entity_type=entity_name)
         filename = "{}_{}.json".format(entity_name,
