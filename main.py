@@ -4,6 +4,7 @@ This the module that serves as an entry point.
 
 # TODO: script for installing and starting Airflow in a container:
 #  https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html#running-the-cli-commands
+# TODO: prepare a script for running pylint on all .py files in the project
 
 import logging
 from logging.config import dictConfig
