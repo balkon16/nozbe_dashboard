@@ -1,7 +1,6 @@
 """
 The class implements a tool for data processing: getting selected fields, computing delta, handling various data types.
 """
-from modules.OSHelper import os_helper
 
 
 # TODO: entity<->fields mapping
@@ -10,6 +9,10 @@ from modules.OSHelper import os_helper
 # TODO: baza Postgres z odpowiednimi użytkownikami (w kontenerze) -> mapowanie na dysk twardy, aby zachować dane
 
 class DataHandler:
+    """
+    The class implements a tool for data processing: getting selected fields, computing delta, handling various data
+    types.
+    """
 
     def __init__(self, data_dir):
         """
@@ -19,4 +22,3 @@ class DataHandler:
         data_dir : pathlib.PosixPath, pathlib.WindowsPath
         """
         self.data_directory = data_dir
-

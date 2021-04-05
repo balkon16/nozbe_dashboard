@@ -1,19 +1,23 @@
 """
-This class handles communication between the application and the Nozbe API. The features include but are not limited to:
-1. Getting the token.
-2. Authenticating.
-3. Performing a request.
-4. Saving a response as a file.
+This module provides a class responsible for communicating with Nozbe's API.
 """
-
-import requests
-import logging
 import json
+import logging
+import requests
 
 from modules.OSHelper.os_helper import OSHelper
 
 
 class APIHandler:
+    """
+    This class handles communication between the application and the Nozbe API. The features include but are not
+    limited to:
+        1. Getting the token.
+        2. Authenticating.
+        3. Performing a request.
+        4. Saving a response as a file.
+    """
+
     os_helper = OSHelper()
 
     def __init__(self, current_dir, credentials_dir_name, credentials_file_name, supported_entities):
@@ -32,10 +36,10 @@ class APIHandler:
             if APIHandler.os_helper.validate_path(current_dir):
                 self.current_dir = current_dir
         except TypeError as err1:
-            logging.error("Couldn't create an instance of class {}: {}".format(self.__class__.__name__, err1))
+            logging.error(f"Couldn't create an instance of class {self.__class__.__name__}: {err1}")
             return
         except FileNotFoundError as err2:
-            logging.error("Couldn't create an instance of class {}: {}".format(self.__class__.__name__, err2))
+            logging.error(f"Couldn't create an instance of class {self.__class__.__name__}: {err2}")
             return
 
         self.credentials_dir = self.current_dir / credentials_dir_name
@@ -45,12 +49,13 @@ class APIHandler:
         logging.debug("Initialized an instance of API Handler class.")
 
     def __repr__(self):
-        return "Instance of {} class. Location: {}".format(self.__class__.__name__, str(self.current_dir.absolute()))
+        return f"Instance of {self.__class__.__name__} class. Location: {str(self.current_dir.absolute())}"
 
     def __str__(self):
-        return "Instance of {} class. Location: {}".format(self.__class__.__name__, str(self.current_dir.absolute()))
+        return f"Instance of {self.__class__.__name__} class. Location: {str(self.current_dir.absolute())}"
 
-    def _send_get_request(self, url, params, payload):
+    @staticmethod
+    def _send_get_request(url, params, payload):
         """
         Send a GET request.
 
@@ -67,28 +72,26 @@ class APIHandler:
         str, None
         """
         try:
-            r = requests.get(url=url, params=params, data=payload)
-            status_code = r.status_code
-            text = r.text
-        except requests.ConnectionError as e:
-            logging.error('Error: {}. Check the url: {}.'.format(e, url))
+            request = requests.get(url=url, params=params, data=payload)
+            status_code = request.status_code
+            text = request.text
+        except requests.ConnectionError as err:
+            logging.error(f'Error: {err}. Check the url: {url}.')
             return None
 
         if status_code == 200:
-            logging.debug("GET request to {} successful.".format(url))
+            logging.debug(f"GET request to {url} successful.")
             return text
-        elif str(status_code).startswith('5'):
-            logging.warning('PUT request to {} unsuccessful. Problem with the server.\nReturn code: {}.' \
-                            .format(url, status_code))
+        if str(status_code).startswith('5'):
+            logging.warning(f'PUT request to {url} unsuccessful. Problem with the server.\nReturn code: {status_code}.')
             return None
-        elif str(status_code).startswith('4'):
-            logging.error('PUT request to {} unsuccessful.\nReturn code: {}.\nMessage: {}' \
-                          .format(url, status_code, text))
+        if str(status_code).startswith('4'):
+            logging.error(f'PUT request to {url} unsuccessful.\nReturn code: {status_code}.\nMessage: {text}')
             return None
-        else:
-            raise NotImplementedError('No handling for error no.: {}.'.format(status_code))
+        raise NotImplementedError(f'No handling for error no.: {status_code}.')
 
-    def _send_put_request(self, url, headers, payload):
+    @staticmethod
+    def _send_put_request( url, headers, payload):
         """
         Send a PUT request.
 
@@ -105,28 +108,33 @@ class APIHandler:
         object
         """
         try:
-            r = requests.put(url=url, headers=headers, data=payload)
-            status_code = r.status_code
-            text = r.text
-        except requests.ConnectionError as e:
-            logging.error('Error: {}. Check the url: {}.'.format(e, url))
-            return
+            request = requests.put(url=url, headers=headers, data=payload)
+            status_code = request.status_code
+            text = request.text
+        except requests.ConnectionError as err:
+            logging.error(f'Error: {err}. Check the url: {url}.')
+            return None
 
         if status_code == 200:
-            logging.debug("PUT request to {} successful.".format(url))
+            logging.debug(f"PUT request to {url} successful.")
         elif str(status_code).startswith('5'):
-            logging.warning('PUT request to {} unsuccessful. Problem with the server.\nReturn code: {}.' \
-                            .format(url, status_code))
+            logging.warning(f'PUT request to {url} unsuccessful. Problem with the server.\nReturn code: {status_code}.')
         elif str(status_code).startswith('4'):
-            logging.error('PUT request to {} unsuccessful.\nReturn code: {}.\nMessage: {}' \
-                          .format(url, status_code, text))
+            logging.error(f'PUT request to {url} unsuccessful.\nReturn code: {status_code}.\nMessage: {text}')
         else:
-            raise NotImplementedError('No handling for error no.: {}.'.format(status_code))
+            raise NotImplementedError(f'No handling for error no.: {status_code}.')
 
         return None
 
     def refresh_token(self, url):
-        logging.info('{}: Refreshing token.'.format(self))
+        """
+
+        Parameters
+        ----------
+        url : string
+            URL of the endpoint used for refreshing the token.
+        """
+        logging.info(f'{self}: Refreshing token.')
         self._send_put_request(url=url,
                                headers={'Authorization': self.credentials_dict['access_token']},
                                payload=None)
@@ -147,16 +155,19 @@ class APIHandler:
         """
 
         if entity_type not in self.supported_entities:
-            raise NotImplementedError("Fetching data for type {} is not implemented.".format(entity_type))
+            raise NotImplementedError(f"Fetching data for type {entity_type} is not implemented.")
         data = 'type={}'.format(entity_type)
         params = {"access_token": self.credentials_dict['access_token']}
         try:
             returned_text = self._send_get_request(url=endpoint, params=params, payload=data)
-            if returned_text:
-                content = json.loads(returned_text)
-                return content
-            else:
+            try:
+                if returned_text:
+                    content = json.loads(returned_text)
+                    return content
                 return None
-        except BaseException as err:
-            logging.error("Couldn't fetch data for {} type: {}".format(entity_type, err))
+            except json.decoder.JSONDecodeError as err:
+                logging.error(f"Couldn't fetch data for {entity_type} type: {err}")
+                return None
+        except NotImplementedError as err:
+            logging.error(f"Couldn't fetch data for {entity_type} type: {err}")
             return None
